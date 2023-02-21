@@ -1,11 +1,29 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import styles from '@/styles/Home.module.css'
+import Head from 'next/head';
+import Image from 'next/image';
+import { Inter } from '@next/font/google';
+import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import styles from '@/styles/Home.module.css';
 
-const inter = Inter({ subsets: ['latin'] })
+const TestStyle = styled.div`
+  color: var(--fg);
+  background-color: var(--bg);
+  height: 100px;
+  width: 100px;
+`;
+
+const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  // useEffect only runs on the client, so now we can safely show the UI
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <>
       <Head>
@@ -15,6 +33,15 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
+        {mounted && (
+          <>
+            <p>The current theme is: {theme}</p>
+            <button onClick={() => setTheme('light')}>Light Mode</button>
+            <button onClick={() => setTheme('dark')}>Dark Mode</button>
+          </>
+        )}
+
+        <TestStyle />
         <div className={styles.description}>
           <p>
             Get started by editing&nbsp;
@@ -119,5 +146,5 @@ export default function Home() {
         </div>
       </main>
     </>
-  )
+  );
 }
